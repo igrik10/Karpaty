@@ -11,16 +11,13 @@
     <div class="vwd4_flash {'flashvars':{'configuration':'/component/json/flashconfig2.json','trackingConfigCallback':'vwd4.config.getTrackConfig'},'height':630,'id':'3bc80a01867e1c42e998e47a20d5c509','params':{'wmode':'opaque'},'swf':'../component/swf/shell.swf','width':958}"></div>
 
 <?}elseif($_GET['page']!='' and $_GET['menu']!=''){
-
     $rez=mysql_fetch_array(mysql_query("SELECT * FROM models WHERE link='$_GET[menu]'"));
-
-
 ?>
-    <meta property="og:title" content="<?= $rez['t']; ?>" />
+    <meta property="og:title" content="<?if($complekt['title'] != '') echo $complekt['title']; else echo $rez['t']; ?>" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="<?= $rez['link']; ?>" />
     <meta property="og:image" />
-    <meta property="og:description" content="<?= $rez['d']; ?>" />
+    <meta property="og:description" content="<?if($complekt['description'] != '') echo $complekt['description']; else echo $rez['d']; ?>" />
 <div class="heder_page"><a class="heder_page_name" href="/<?echo $_GET['page'].'/'.$_GET['menu'];?>/"><?echo $rez['name'];?></a>
 
 <ul>
@@ -40,7 +37,6 @@ if($rez['technical']=='1') {  echo'<li><a href="/'.$_GET['page'].'/'.$_GET['menu
 if($rez['deals']=='1') {  echo'<li><a href="/'.$_GET['page'].'/'.$_GET['menu'].'/special_offers/">Спецпредложения</a></li>';}
 
 if($rez['press']=='1') {  echo'<li><a href="/'.$_GET['page'].'/'.$_GET['menu'].'/press/">Пресса</a></li>';}
-
 
 ?>
 <li><a href="/index.php?page=avto_in_stock&isset&car=<?= urlencode($rez['name']); ?>">Авто в наличии</a></li>
@@ -150,7 +146,6 @@ echo '<div class="blok_complete"><div class="name_complekt_fga"><img src="/photo
 		echo '<h3 style="font-size:12px;">Цена: '.$comp['cena'].'<h3>';
 	}
 echo '</div><ul class="dt_complete">';
-
     $arr_man_tesee=array();
 
     $c=mysql_query("SELECT * FROM  `complekt` WHERE id_model='".$rez['id']."' AND link='".$complekt['link']."'");
@@ -174,6 +169,8 @@ $thisCompleteiD = $cp['id'];
 		}else{
 			echo '<li>Тип двигателя: Дизель</li>';
 		}*/
+        $link = $cp['link'];
+        $id = $rez['id'];
         echo '<li>Описание: '.($cp['text']).'</li>';
         $tf=mysql_query("SELECT * FROM  `complekt_p` WHERE  `model`='".$rez['id']."' AND `name`!='Цена'");
 
@@ -194,8 +191,15 @@ $thisModeliD = $teh['id'];
                          }}}}
 
 foreach($arr_man_tesee as $key=>$val){echo '<li>'.$key.'</li>';}unlink($arr_man_tesee);echo'</ul><div class="cl" style="height: 30px;"></div>
-<a class="link_d" style="bottom:30px !important;" href="/models/'.$_GET['menu'].'/features/'.$complekt['link'].'/">Подробнее</a><br/>
-<a class="link_d" style="bottom:10px !important;" href="/callback/">Записаться на тест-драйв</a>
+<a class="link_d" style="bottom:50px !important;" href="/models/'.$_GET['menu'].'/features/'.$complekt['link'].'/">Подробнее</a><br/>
+<a class="link_d" style="bottom:30px !important;" href="/callback/">Записаться на тест-драйв</a>
+
+
+<form action="/pre_order.php" method="post">
+    <input type="submit" class="link_d" style="bottom:10px !important;" value="Заказ">
+    <input type="hidden" name="link" value="'.$link.'">
+    <input type="hidden" name="id" value="'.$id.'">
+</form>
 
 
 
